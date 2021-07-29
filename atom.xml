@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://otirik-handi.github.io</id>
     <title>Otirik&apos;s Blog</title>
-    <updated>2021-07-29T09:08:45.702Z</updated>
+    <updated>2021-07-29T09:24:41.422Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://otirik-handi.github.io"/>
     <link rel="self" href="https://otirik-handi.github.io/atom.xml"/>
@@ -11,12 +11,157 @@
     <icon>https://otirik-handi.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Otirik&apos;s Blog</rights>
     <entry>
-        <title type="html"><![CDATA[demo]]></title>
-        <id>https://otirik-handi.github.io/post/demo/</id>
-        <link href="https://otirik-handi.github.io/post/demo/">
+        <title type="html"><![CDATA[JavaScript学习笔记(手写promise)]]></title>
+        <id>https://otirik-handi.github.io/post/js_note/</id>
+        <link href="https://otirik-handi.github.io/post/js_note/">
         </link>
         <updated>2021-07-29T08:36:57.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="this-is-a-demo">this is a demo</h1>
+        <content type="html"><![CDATA[<p>废话不多说, 直接上代码.</p>
+<pre><code class="language-javascript">class MyPromise {
+
+  static PENDING = &quot;pending&quot;
+
+  static FULFILLED = &quot;fulfilled&quot;
+
+  static REJECTED = &quot;rejected&quot;
+
+  constructor(executor) {
+    this.status = MyPromise.PENDING
+    this.value = null
+    this.callbacks = []
+    try { // 捕获执行者出现错误
+      executor(this.resovle.bind(this), this.reject.bind(this)) // 绑定this
+    } catch (error) {
+      this.reject(error)
+    }
+  }
+
+  resovle(value) {
+    if (this.status === MyPromise.PENDING) { // 状态保护
+      this.status = MyPromise.FULFILLED
+      this.value = value
+      setTimeout(() =&gt; {
+        this.callbacks.map(callback =&gt; {
+          callback.onFulfilled(value)
+        })
+      })
+    }
+  }
+
+  reject(reason) {
+    if (this.status == MyPromise.PENDING) { // 状态保护
+      this.status = MyPromise.REJECTED
+      this.value = reason
+      setTimeout(() =&gt; {
+        this.callbacks.map(callback =&gt; {
+          callback.onRejected(reason)
+        })
+      })
+    }
+  }
+
+  then(onFulfilled, onRejected) {
+    if (typeof onFulfilled === 'function') {
+      onFulfilled = () =&gt; this.value
+    }
+
+    if (typeof onRejected === 'function') {
+      onRejected = () =&gt; this.value
+    }
+
+    let promise = new MyPromise((resovle, reject) =&gt; {
+      if (this.status === MyPromise.PENDING) {
+        this.callbacks.push({
+          onFulfilled: value =&gt; {
+            this.parse(promise, onFulfilled(value), resovle, reject)
+          },
+          onRejected: reason =&gt; {
+            this.parse(promise, onRejected(reason), resovle, reject)
+          }
+        })
+      }
+
+      if (this.status === MyPromise.FULFILLED) {
+        setTimeout(() =&gt; {
+          this.parse(promise, onFulfilled(this.value), resovle, reject)
+        })
+      }
+
+      if (this.status === MyPromise.REJECTED) {
+        setTimeout(() =&gt; {
+          this.parse(promise, onRejected(this.value), resovle, reject)
+        })
+      }
+    })
+
+    return promise
+  }
+
+  parse(promise, result, resovle, reject) {
+    if (promise == result) {
+      throw TypeError(&quot;Chaining cycle detected for MyPromise&quot;)
+    }
+    try {
+      if (result instanceof MyPromise) {
+        result.then(resovle, reject)
+        // result.then(value =&gt; {
+        //   resovle(result)
+        // }, reason =&gt; {
+        //   reject(reason)
+        // })
+      } else {
+        resovle(result)
+      }
+    } catch (error) {
+      reject(error)
+    }
+  }
+
+  static resovle(value) {
+    return new MyPromise((resovle, reject) =&gt; {
+      if (value instanceof MyPromise) {
+        value.then(resovle, reject)
+      } else {
+        resovle(value)
+      }
+    })
+  }
+
+  static reject(reason) {
+    return new MyPromise((resovle, reject) =&gt; {
+      reject(reason)
+    })
+  }
+
+  static all(promises) {
+    const values = []
+    return new MyPromise((resolve, reject) =&gt; {
+      promises.forEach(promise =&gt; {
+        promise.then(value =&gt; {
+          values.push(value)
+          if (values.length === promies.length) {
+            resolve()
+          }
+        }, reason =&gt; {
+          reject(reason)
+        })
+      })
+    })
+  }
+
+  static race(promises) {
+    return new MyPromise((resovle, reject) =&gt; {
+      promises.map(promise =&gt; {
+        promise.then(value =&gt; {
+          resovle(value)
+        }, reason =&gt; {
+          reject(reason)
+        })
+      })
+    })
+  }
+}
+</code></pre>
 ]]></content>
     </entry>
     <entry>
