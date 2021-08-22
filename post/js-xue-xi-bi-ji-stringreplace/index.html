@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>JS学习笔记: String.replace | Otirik&#39;s Blog</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://otirik-handi.github.io//favicon.ico?v=1629646988483">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://otirik-handi.github.io//styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://otirik-handi.github.io/">Otirik&#39;s Blog</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="/" class="menu">
+                首页
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/archives" class="menu">
+                归档
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/tags" class="menu">
+                标签
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/post/about" class="menu">
+                关于
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>JS学习笔记: String.replace</h1>
+            <p class="article-meta">
+              2021-08-21
+              
+            </p>
+            
+            <div class="post-content">
+              <p>今天学习了正则表达式, 发现<strong>replace方法+re</strong>效果非常强大</p>
+<h2 id="strreplaceold-new">str.replace(old, new)</h2>
+<p><strong>生成一个新字符串，并将str中old字符串部分替换成new字符串</strong></p>
+<p>例子：</p>
+<pre><code class="language-js">    let str = &quot;hello, world!&quot;, oldStr = &quot;world!&quot;, newStr = &quot;JavaScript!&quot;
+    let res = str.replace(oldStr, newStr)
+    console.log(res)
+</code></pre>
+<p>输出:</p>
+<pre><code>hello, JavaScript!
+</code></pre>
+<p>接下来就是结合正则表达式了，不了解正则表达式的可以看看这个哦👉 <strong><a href="https://doc.houdunren.com/js/14%20%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html">后盾人正则表达式教程</a></strong></p>
+<h2 id="strreplacereg-new">str.replace(reg, new)</h2>
+<p><strong>生成一个新字符串，并将str中正则表达式匹配部分替换成new字符串</strong></p>
+<p>一个简单的例子：</p>
+<pre><code class="language-js">let str = &quot;Java, JavaScript&quot;, reg = /Java(?=[a-z])/gi, newStr = &quot;Type&quot;
+let res = str.replace(reg, newStr)
+console.log(res)
+</code></pre>
+<p>输出：</p>
+<pre><code>Java, TypeScript
+</code></pre>
+<p>一个复杂的例子:</p>
+<pre><code class="language-js">    // 使用replace提取域名 
+let str = `
+    https://www.baidu.com
+    http://www.houdunren.com
+`
+let reg = /https?:\/\/(www\.\w+?\.com)/gi
+let res = str.replace(reg, &quot;$1&quot;) 
+console.log(res)
+</code></pre>
+<p>输出：</p>
+<pre><code>    www.baidu.com
+    www.houdunren.com
+</code></pre>
+<p>在这个例子中 <strong>$1</strong> 指代正则表达式中第一个分组所匹配的内容, 同理 <strong>$2</strong>, <strong>$3</strong>表示<strong>分组2，分组3匹配的内容</strong></p>
+<h3 id="replace中使用正则表达式后需要替换的字符串中的特殊变量">replace中使用正则表达式后需要替换的字符串中的特殊变量</h3>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>含义</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$&amp;</td>
+<td>插入匹配的子串。</td>
+<td>&quot;abc&quot;.replace(/b/g, &quot;@$&amp;@&quot;) =&gt; &quot;a@b@c&quot;</td>
+</tr>
+<tr>
+<td>$`</td>
+<td>插入当前匹配的子串左边的内容。</td>
+<td>&quot;abc&quot;.replace(/b/g, &quot;@$`@&quot;) =&gt; &quot;a@a@c&quot;</td>
+</tr>
+<tr>
+<td>$'</td>
+<td>插入当前匹配的子串右边的内容。</td>
+<td>&quot;abc&quot;.replace(/b/g, &quot;@$'@&quot;) =&gt; &quot;a@c@c&quot;</td>
+</tr>
+<tr>
+<td>$n</td>
+<td>假如第一个参数是 RegExp 对象，并且 n 是个小于100的非负整数，那么插入第 n 个括号匹配的字符串。提示：索引是从1开始</td>
+<td>&quot;abc&quot;.replace(/b(c)/g, &quot;@$1@&quot;) =&gt; &quot;a@c@&quot;</td>
+</tr>
+<tr>
+<td>$&lt;groupName&gt;</td>
+<td>插入分组groupName匹配的子串</td>
+<td>&quot;abc&quot;.replace(/(?&lt;x&gt;a)b/g, &quot;@$&lt;x&gt;@&quot;) =&gt; &quot;@a@c&quot;</td>
+</tr>
+<tr>
+<td>$$</td>
+<td>插入一个 &quot;$&quot;。</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="strreplacereg-callback">str.replace(reg, callback)</h2>
+<p><strong>生成一个新字符串，并将str中正则表达式匹配部分替换成callback返回的字符串</strong><br>
+一个简单的例子：</p>
+<pre><code class="language-js">let str = &quot;Java, JavaScript&quot;, reg = /Java([a-z]*)/gi
+let res = str.replace(reg, (all, group1) =&gt; {
+    return &quot;@&quot; + all + &quot;@&quot; + group1 + &quot;@&quot;
+})
+console.log(res)
+</code></pre>
+<p>输出：</p>
+<pre><code>@Java@@, @JavaScript@Script@
+</code></pre>
+<p>当replace的第二个参数为函数时, 这个函数会接收的参数为: 整个匹配结果, 分组1的结果, 分组2的结果...<br>
+当正则表达式中的分组被命名时:</p>
+<pre><code class="language-js">let str = &quot;Java, JavaScript&quot;, reg = /Java(?&lt;x&gt;[a-z]*)(?&lt;y&gt;[,]*)/gi
+let res = str.replace(reg, (all, x, y) =&gt; { 
+    return &quot;@&quot; + all + &quot;@&quot; + x + &quot;@&quot; + y +&quot;@&quot;
+})
+console.log(res)
+</code></pre>
+<p>输出:</p>
+<pre><code>@Java,@@,@ @JavaScript@Script@@
+</code></pre>
+<p>我们将形参中x,y互换位置:</p>
+<pre><code class="language-js">let str = &quot;Java, JavaScript&quot;, reg = /Java(?&lt;x&gt;[a-z]*)(?&lt;y&gt;[,]*)/gi
+let res = str.replace(reg, (all, y, x) =&gt; { 
+    return &quot;@&quot; + all + &quot;@&quot; + x + &quot;@&quot; + y +&quot;@&quot;
+})
+console.log(res)
+</code></pre>
+<p>输出:</p>
+<pre><code>@Java,@,@@ @JavaScript@@Script@
+</code></pre>
+<p>通过对比2次输出我们发现分组命名并不会影响参数的传递<br>
+事实上它还是这样传递的:</p>
+<pre><code class="language-js">// ...
+let res = str.replace(reg, (all, group1, group2) =&gt; { /* ... */ })
+// ...
+</code></pre>
+<h3 id="replace使用正则表达式加回调函数的时候回调函数接收的参数">replace使用正则表达式加回调函数的时候,回调函数接收的参数</h3>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>代表的值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>match</td>
+<td>匹配的子串。（对应于上述的$&amp;。）</td>
+</tr>
+<tr>
+<td>p1,p2, ...</td>
+<td>假如replace()方法的第一个参数是一个 RegExp 对象，则代表第n个括号匹配的字符串。（对应于上述的$1，$2等。）例如，如果是用 /(\a+)(\b+)/ 这个来匹配，p1 就是匹配的 \a+，p2 就是匹配的 \b+。</td>
+</tr>
+<tr>
+<td>offset</td>
+<td>匹配到的子字符串在原字符串中的偏移量。（比如，如果原字符串是 'abcd'，匹配到的子字符串是 'bc'，那么这个参数将会是 1）</td>
+</tr>
+<tr>
+<td>string</td>
+<td>被匹配的原字符串。</td>
+</tr>
+<tr>
+<td>NamedCaptureGroup</td>
+<td>命名捕获组匹配的对象</td>
+</tr>
+</tbody>
+</table>
+<p>今天的笔记就到此结束了，学习愉快！</p>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://otirik-handi.github.io/post/js_note/">
+                <h3 class="post-title">
+                  JavaScript学习笔记(手写promise)
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://otirik-handi.github.io//images/avatar.png?v=1629646988483" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://otirik-handi.github.io/post/js-xue-xi-bi-ji-stringreplace/">JS学习笔记: String.replace</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://otirik-handi.github.io/post/js_note/">JavaScript学习笔记(手写promise)</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://otirik-handi.github.io/post/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://otirik-handi.github.io/post/hello-gridea/">Hello Gridea</a>
+            </li>
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://otirik-handi.github.io/tag/P_ar7hl3u/" class="badge success">
+          JavaScript
+        </a>
+      
+        <a href="https://otirik-handi.github.io/tag/JxnC_xMWY/" class="badge ">
+          Gridea
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://otirik-handi.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

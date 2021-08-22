@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://otirik-handi.github.io/</id>
     <title>Otirik&apos;s Blog</title>
-    <updated>2021-07-29T09:42:57.364Z</updated>
+    <updated>2021-08-22T15:43:45.793Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://otirik-handi.github.io/"/>
     <link rel="self" href="https://otirik-handi.github.io/atom.xml"/>
@@ -10,6 +10,164 @@
     <logo>https://otirik-handi.github.io/images/avatar.png</logo>
     <icon>https://otirik-handi.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Otirik&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[JS学习笔记: String.replace]]></title>
+        <id>https://otirik-handi.github.io/post/js-xue-xi-bi-ji-stringreplace/</id>
+        <link href="https://otirik-handi.github.io/post/js-xue-xi-bi-ji-stringreplace/">
+        </link>
+        <updated>2021-08-21T14:50:09.000Z</updated>
+        <content type="html"><![CDATA[<p>今天学习了正则表达式, 发现<strong>replace方法+re</strong>效果非常强大</p>
+<h2 id="strreplaceold-new">str.replace(old, new)</h2>
+<p><strong>生成一个新字符串，并将str中old字符串部分替换成new字符串</strong></p>
+<p>例子：</p>
+<pre><code class="language-js">    let str = &quot;hello, world!&quot;, oldStr = &quot;world!&quot;, newStr = &quot;JavaScript!&quot;
+    let res = str.replace(oldStr, newStr)
+    console.log(res)
+</code></pre>
+<p>输出:</p>
+<pre><code>hello, JavaScript!
+</code></pre>
+<p>接下来就是结合正则表达式了，不了解正则表达式的可以看看这个哦👉 <strong><a href="https://doc.houdunren.com/js/14%20%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html">后盾人正则表达式教程</a></strong></p>
+<h2 id="strreplacereg-new">str.replace(reg, new)</h2>
+<p><strong>生成一个新字符串，并将str中正则表达式匹配部分替换成new字符串</strong></p>
+<p>一个简单的例子：</p>
+<pre><code class="language-js">let str = &quot;Java, JavaScript&quot;, reg = /Java(?=[a-z])/gi, newStr = &quot;Type&quot;
+let res = str.replace(reg, newStr)
+console.log(res)
+</code></pre>
+<p>输出：</p>
+<pre><code>Java, TypeScript
+</code></pre>
+<p>一个复杂的例子:</p>
+<pre><code class="language-js">    // 使用replace提取域名 
+let str = `
+    https://www.baidu.com
+    http://www.houdunren.com
+`
+let reg = /https?:\/\/(www\.\w+?\.com)/gi
+let res = str.replace(reg, &quot;$1&quot;) 
+console.log(res)
+</code></pre>
+<p>输出：</p>
+<pre><code>    www.baidu.com
+    www.houdunren.com
+</code></pre>
+<p>在这个例子中 <strong>$1</strong> 指代正则表达式中第一个分组所匹配的内容, 同理 <strong>$2</strong>, <strong>$3</strong>表示<strong>分组2，分组3匹配的内容</strong></p>
+<h3 id="replace中使用正则表达式后需要替换的字符串中的特殊变量">replace中使用正则表达式后需要替换的字符串中的特殊变量</h3>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>含义</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$&amp;</td>
+<td>插入匹配的子串。</td>
+<td>&quot;abc&quot;.replace(/b/g, &quot;@$&amp;@&quot;) =&gt; &quot;a@b@c&quot;</td>
+</tr>
+<tr>
+<td>$`</td>
+<td>插入当前匹配的子串左边的内容。</td>
+<td>&quot;abc&quot;.replace(/b/g, &quot;@$`@&quot;) =&gt; &quot;a@a@c&quot;</td>
+</tr>
+<tr>
+<td>$'</td>
+<td>插入当前匹配的子串右边的内容。</td>
+<td>&quot;abc&quot;.replace(/b/g, &quot;@$'@&quot;) =&gt; &quot;a@c@c&quot;</td>
+</tr>
+<tr>
+<td>$n</td>
+<td>假如第一个参数是 RegExp 对象，并且 n 是个小于100的非负整数，那么插入第 n 个括号匹配的字符串。提示：索引是从1开始</td>
+<td>&quot;abc&quot;.replace(/b(c)/g, &quot;@$1@&quot;) =&gt; &quot;a@c@&quot;</td>
+</tr>
+<tr>
+<td>$&lt;groupName&gt;</td>
+<td>插入分组groupName匹配的子串</td>
+<td>&quot;abc&quot;.replace(/(?&lt;x&gt;a)b/g, &quot;@$&lt;x&gt;@&quot;) =&gt; &quot;@a@c&quot;</td>
+</tr>
+<tr>
+<td>$$</td>
+<td>插入一个 &quot;$&quot;。</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="strreplacereg-callback">str.replace(reg, callback)</h2>
+<p><strong>生成一个新字符串，并将str中正则表达式匹配部分替换成callback返回的字符串</strong><br>
+一个简单的例子：</p>
+<pre><code class="language-js">let str = &quot;Java, JavaScript&quot;, reg = /Java([a-z]*)/gi
+let res = str.replace(reg, (all, group1) =&gt; {
+    return &quot;@&quot; + all + &quot;@&quot; + group1 + &quot;@&quot;
+})
+console.log(res)
+</code></pre>
+<p>输出：</p>
+<pre><code>@Java@@, @JavaScript@Script@
+</code></pre>
+<p>当replace的第二个参数为函数时, 这个函数会接收的参数为: 整个匹配结果, 分组1的结果, 分组2的结果...<br>
+当正则表达式中的分组被命名时:</p>
+<pre><code class="language-js">let str = &quot;Java, JavaScript&quot;, reg = /Java(?&lt;x&gt;[a-z]*)(?&lt;y&gt;[,]*)/gi
+let res = str.replace(reg, (all, x, y) =&gt; { 
+    return &quot;@&quot; + all + &quot;@&quot; + x + &quot;@&quot; + y +&quot;@&quot;
+})
+console.log(res)
+</code></pre>
+<p>输出:</p>
+<pre><code>@Java,@@,@ @JavaScript@Script@@
+</code></pre>
+<p>我们将形参中x,y互换位置:</p>
+<pre><code class="language-js">let str = &quot;Java, JavaScript&quot;, reg = /Java(?&lt;x&gt;[a-z]*)(?&lt;y&gt;[,]*)/gi
+let res = str.replace(reg, (all, y, x) =&gt; { 
+    return &quot;@&quot; + all + &quot;@&quot; + x + &quot;@&quot; + y +&quot;@&quot;
+})
+console.log(res)
+</code></pre>
+<p>输出:</p>
+<pre><code>@Java,@,@@ @JavaScript@@Script@
+</code></pre>
+<p>通过对比2次输出我们发现分组命名并不会影响参数的传递<br>
+事实上它还是这样传递的:</p>
+<pre><code class="language-js">// ...
+let res = str.replace(reg, (all, group1, group2) =&gt; { /* ... */ })
+// ...
+</code></pre>
+<h3 id="replace使用正则表达式加回调函数的时候回调函数接收的参数">replace使用正则表达式加回调函数的时候,回调函数接收的参数</h3>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>代表的值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>match</td>
+<td>匹配的子串。（对应于上述的$&amp;。）</td>
+</tr>
+<tr>
+<td>p1,p2, ...</td>
+<td>假如replace()方法的第一个参数是一个 RegExp 对象，则代表第n个括号匹配的字符串。（对应于上述的$1，$2等。）例如，如果是用 /(\a+)(\b+)/ 这个来匹配，p1 就是匹配的 \a+，p2 就是匹配的 \b+。</td>
+</tr>
+<tr>
+<td>offset</td>
+<td>匹配到的子字符串在原字符串中的偏移量。（比如，如果原字符串是 'abcd'，匹配到的子字符串是 'bc'，那么这个参数将会是 1）</td>
+</tr>
+<tr>
+<td>string</td>
+<td>被匹配的原字符串。</td>
+</tr>
+<tr>
+<td>NamedCaptureGroup</td>
+<td>命名捕获组匹配的对象</td>
+</tr>
+</tbody>
+</table>
+<p>今天的笔记就到此结束了，学习愉快！</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[JavaScript学习笔记(手写promise)]]></title>
         <id>https://otirik-handi.github.io/post/js_note/</id>
